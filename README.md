@@ -1,6 +1,5 @@
 ## TOMLenv
-This simpel package will read all the variables from your `.toml` file and put them in the environment so you can easily access them via `os.Getenv("varname")`.
-
+This simple package will read all the variables from your `.toml` file and put them in the environment so you can easily access them via `os.Getenv("varname")`.
 
 ### Installation
 ```shell
