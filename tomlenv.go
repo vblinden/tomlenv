@@ -7,19 +7,59 @@ import (
 	"github.com/pelletier/go-toml"
 )
 
-func Load(filenames ...string) {
+// Load the default "env.toml" into your environment
+func Load() error {
+	err := LoadFile("env.toml")
+
+	return err
+}
+
+// LoadFile wil load one or multiple files into your environment
+func LoadFile(filenames ...string) error {
 	if len(filenames) == 0 {
-		filenames = []string{"env.toml"}
+		return fmt.Errorf("You must provide atleast one filename.")
 	}
 
 	for _, filename := range filenames {
 		config, err := toml.LoadFile(filename)
 		if err != nil {
-			panic(fmt.Sprintf("Can't read env variables from %s file.", filename))
+			panic(fmt.Sprintf("Can't read environment variables from %s file.", filename))
 		}
 
-		for _, key := range config.Keys() {
-			os.Setenv(key, fmt.Sprintf("%v", config.GetDefault(key, "")))
+		loadInEnvironment(config)
+	}
+
+	return nil
+}
+
+// LoadString will load environment in based on a given TOML string
+func LoadString(content string) error {
+	config, err := toml.Load(content)
+	if err != nil {
+		return err
+	}
+
+	loadInEnvironment(config)
+
+	return nil
+}
+
+func loadInEnvironment(config *toml.Tree) {
+	configMap := config.ToMap()
+
+	for i := range configMap {
+		if _, ok := configMap[i].(map[string]interface{}); ok {
+			configMapValue := configMap[i].(map[string]interface{})
+			for j := range configMapValue {
+				os.Setenv(
+					fmt.Sprintf("%s.%v", i, j),
+					fmt.Sprintf("%v", configMapValue[j]),
+				)
+			}
+
+			continue
 		}
+
+		os.Setenv(i, fmt.Sprintf("%v", configMap[i]))
 	}
 }
