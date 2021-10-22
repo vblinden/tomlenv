@@ -34,6 +34,9 @@ func main() {
 
     // Will print "abcdef123456"...
     fmt.Printf(os.Getenv("token"))
+    
+    // To load a string...
+    tomlenv.LoadString("[database]  username = \"john\"")
 
     // Will print "john"...
     fmt.Printf(os.Getenv("database.username"))
