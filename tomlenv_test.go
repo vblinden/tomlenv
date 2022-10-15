@@ -9,7 +9,10 @@ import (
 func TestLoadSimpleString(t *testing.T) {
 	testToken := "abcdef123456"
 
-	LoadString(fmt.Sprintf("token = \"%s\"", testToken))
+	err := LoadString(fmt.Sprintf("token = \"%s\"", testToken))
+	if err != nil {
+		t.Fail()
+	}
 
 	if os.Getenv("token") != testToken {
 		t.Fail()
@@ -19,7 +22,10 @@ func TestLoadSimpleString(t *testing.T) {
 func TestLoadExtendedString(t *testing.T) {
 	testUsername := "john"
 
-	LoadString(fmt.Sprintf("[database]\n\rusername = \"%s\"", testUsername))
+	err := LoadString(fmt.Sprintf("[database]\n\rusername = \"%s\"", testUsername))
+	if err != nil {
+		t.Fail()
+	}
 
 	if os.Getenv("database.username") != testUsername {
 		t.Fail()
