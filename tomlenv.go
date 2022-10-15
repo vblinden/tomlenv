@@ -51,7 +51,7 @@ func loadInEnvironment(config *toml.Tree) {
 		if _, ok := configMap[i].(map[string]interface{}); ok {
 			configMapValue := configMap[i].(map[string]interface{})
 			for j := range configMapValue {
-				os.Setenv(
+				_ = os.Setenv(
 					fmt.Sprintf("%s.%v", i, j),
 					fmt.Sprintf("%v", configMapValue[j]),
 				)
@@ -60,6 +60,6 @@ func loadInEnvironment(config *toml.Tree) {
 			continue
 		}
 
-		os.Setenv(i, fmt.Sprintf("%v", configMap[i]))
+		_ = os.Setenv(i, fmt.Sprintf("%v", configMap[i]))
 	}
 }
